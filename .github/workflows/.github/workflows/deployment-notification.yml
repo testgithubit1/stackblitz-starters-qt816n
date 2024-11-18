@@ -1,0 +1,23 @@
+name: Deployment Notification to Admins
+
+on:
+  push:
+    branches:
+      - main  # Trigger this action when code is pushed to the 'main' branch
+
+jobs:
+  notify-admins:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Slack Notification to Admins
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Attention: A new deployment is about to happen on the main branch!"}' \
+          $SLACK_WEBHOOK_URL  # Slack webhook URL for sending notifications
+
+      - name: Wait for Approval from Admins
+        run: |
+          # Pause the deployment here if needed (e.g., using a manual approval step)
+          echo "Admin approval required before deployment."
+          sleep 30  # Pause for 30 seconds or implement other logic for admin review
