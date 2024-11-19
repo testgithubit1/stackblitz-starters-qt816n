@@ -1,0 +1,27 @@
+name: Commit Notification
+
+on:
+  push:
+    branches:
+      - main  # or any branch you want to track
+
+jobs:
+  notify-admin:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send commit notification email
+      uses: peter-evans/send-mail@v2
+      with:
+        smtp-server: smtp.gmail.com
+        smtp-port: 587
+        smtp-username: ${{ secrets.SMTP_USERNAME }}
+        smtp-password: ${{ secrets.SMTP_PASSWORD }}
+        from-email: 'youremail@example.com'
+        to-email: 'adminemail@example.com'
+        subject: 'New Commit in Repository'
+        body: |
+          A new commit has been pushed to the repository.
+          Commit details:
+          Author: ${{ github.actor }}
+          Commit message: ${{ github.event.head_commit.message }}
+          Commit URL: ${{ github.event.head_commit.url }}
