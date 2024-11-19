@@ -1,0 +1,30 @@
+name: Commit Email Notification
+
+on:
+  push:
+    branches:
+      - main  # Or specify other branches
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Send Commit Notification Email
+        uses: peter-evans/send-mail@v2
+        with:
+          smtp-server: smtp.gmail.com  # Or use another SMTP server
+          smtp-port: 587
+          smtp-username: ${{ secrets.SMTP_USERNAME }}  # Store the username in GitHub secrets
+          smtp-password: ${{ secrets.SMTP_PASSWORD }}  # Store the password in       GitHub secrets
+          from-email: 'youremail@example.com'
+          to-email: 'adminemail@example.com'
+          subject: 'New Commit Alert'
+          body: |
+            A new commit has been pushed to the repository:
+            Author: ${{ github.actor }}
+            Commit message: ${{ github.event.head_commit.message }}
+            Commit URL: ${{ github.event.head_commit.url }}
